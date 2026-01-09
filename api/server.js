@@ -49,9 +49,15 @@ app.use((req, res, next) => {
     next(err);
 });
 
-// ROTA - 422,500,401
+// ROTA - 422, 500, 401
 app.use((err, req, next) => {
     res.status(err.status || 500);
     if(err.status !== 404) console.warn("Error: ", err.message, new Date());
     res.json
-})
+}); 
+
+// ESCUTAR
+app.listen(PORT, (err) => {
+    if(err) throw err;
+    console.log(`Rodando na //localhost:${PORT}`);
+});

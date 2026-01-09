@@ -4,15 +4,32 @@
   "description": "Api para projeto Ecommerce do zero",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timout 2000 --exit",
+    "dev": "NODE_END-development nodemon server.js",
+    "build": "NODE_ENV=production pm2 start server.js --name=\"ecommerce-api\""
   },
   "author": "Carlos Peres",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "axios": "^1.13.2",
+    "body-parser": "^2.2.2",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "ejs": "^3.1.10",
     "express": "^5.2.1",
-    "mongoose": "^9.1.2"
+    "express-jwt": "^8.5.1",
+    "faker": "^6.6.6",
+    "jsonwebtoken": "^9.0.3",
+    "moment": "^2.30.1",
+    "mongoose": "^9.1.2",
+    "mongoose-paginate": "^5.0.3",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.12",
+    "nodemon": "^3.1.11",
+    "request": "^2.88.2",
+    "xml2js": "^0.6.2"
   }
 }
