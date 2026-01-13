@@ -1,12 +1,12 @@
-const compression = require*('compression');
-const express = require*('express');
-const ejs = require*('ejs');
-const bodyParser = require*('body-parser');
-const mongoose = require*('mongoose');
-const morgan = require*('morgan');
-const cors = require*('cors');
+const compression = require('compression');
+const express = require('express');
+const ejs = require('ejs');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const cors = require('cors');
 
-// START
+// STARTnp 
 const app = express();
 
 // AMBIENTE
@@ -14,11 +14,11 @@ const isProduction = process.env.NODE_ENDV === 'production';
 const PORT = process.env.PORT || 3000; 
 
 // ARQUIVOS ESTÁTICOS
-app.use("/public", express.stati(__filename + "/public"));
-app.use("/public/images", express.stati(__filename + "/public/images"));
+app.use("/public", express.static(__filename + "/public"));
+app.use("/public/images", express.static(__filename + "/public/images"));
 
 // SETUP MONGODB
-const dbs = require("./config/database")
+const dbs = require("../config/database.json")
 dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, {useNewUrlParser: true});
 
@@ -40,7 +40,7 @@ app.use(bodyParser.json({limit: 1.5*1024*1024 }));
 require("./models");
 
 // ROTAS
-app.use("/", require("./routes"));
+app.use("/", require("./routes/api/v1"));
 
 // 404 - ROTA
 app.use((req, res, next) => {

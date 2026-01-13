@@ -96,7 +96,9 @@ class UsuarioController {
             if(!usuario) return res.render("recovery", { error: "Não existe usuário com este email", sucess: null });
             const recoveryData = usuario.criarTokenRecuperacaoSenha();
             return usuario.save().then(() => {
-                return res.render("recovery", { error: null, sucess: true });
+                enviarEmailRecovery({ usuario, recovery: recoveryData }, (error = null, sucess = null) => {
+                    return res.render("recovery", { error, sucess: true });
+                });
             }).catch(next);
         }).catch(next);
     }
