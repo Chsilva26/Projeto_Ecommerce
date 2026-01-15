@@ -4,8 +4,6 @@ const UsuarioController = require("../../../controllers/usuarioController");
 
 const usuarioController = new UsuarioController();
 
-router.get("/", auth.required, usuarioController.index);
-router.get("/:id", auth.required, usuarioController.show);
 
 router.post("/login", usuarioController.login);
 router.post("/registra", usuarioController.store);
@@ -16,5 +14,10 @@ router.get("/recuperar-senha", usuarioController.showRecovery);
 router.post("/recuperar-senha", usuarioController.createRecovery);
 router.get("/senha-recuperada", usuarioController.showCompleteRecovery);
 router.post("/senha-recuperada", usuarioController.completeRecovery)
+
+router.get("/", auth.required, usuarioController.index);
+router.get("/:id", auth.required, usuarioController.show);
+
+
 
 module.exports = router;

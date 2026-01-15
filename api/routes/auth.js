@@ -8,7 +8,7 @@ function getTokenFromHeader(req){
     return token[1];
 }
 
-"Ecommerce"
+// "Ecommerce"
 
 const auth = {
     required: jwt({
