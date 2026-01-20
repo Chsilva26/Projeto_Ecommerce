@@ -8,13 +8,15 @@ class UsuarioController {
     index(req, res, next) {
         Usuario.findById(req.payload.id).then(usuario => {
             if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
-            return res.json({ usuario: usuario.eviarAuthJSON() });
+            return res.json({ usuario: usuario.enviarAuthJSON() });
         }).catch(next);
     }
 
     // GET /:id
     show(req, res, next){   
-        Usuario.findById(req.params.id).populate({ path: "loja"}).then(usuario =>{
+        Usuario.findById(req.params.id)
+        // .populate({ path: "loja"})
+        .then(usuario =>{
             if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
             return res.json({
                 usuario: {
@@ -29,11 +31,14 @@ class UsuarioController {
 
     // POST /registrar
     store(req, res, next){
-        const {nome, email, password} = req.body;
+        const {nome, email, password, loja} = req.body;
 
-        if ( !nome || !email || !password ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro." });
+        if ( !nome || !email || !password || !loja ) 
+            return res.status(422).json({
+                errors: "Preencha todos os campos de cadastro." 
+            });
 
-        const usuario = new Usuario({ nome, email});
+        const usuario = new Usuario({ nome, email, loja});
         usuario.setSenha(password);
 
         usuario.save()
@@ -42,26 +47,55 @@ class UsuarioController {
     }
 
     // PUT /
-    update(req, res, next){
-        const { nome,email, password } = req.body;
-        Usuario.findById(req.payload.id).then((usuario) => {
+    update(req, res, next) {
+        console.log('req.headers:', req.headers);
+        console.log('req.body:', req.body);
+        console.log('req.user || req.payload:', req.user || req.payload);
+        
+        const { nome, email, password } = req.body || {};
+        
+        if (!req.user && !req.payload) {
+            return res.status(401).json({ error: 'Token não encontrado ou inválido' });
+        }
+
+        const userId = (req.payload ? req.payload.id : req.user.id);
+        
+        Usuario.findById(userId).then((usuario) => {
             if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
             if(typeof nome !== "undefined") usuario.nome = nome;
             if(typeof email !== "undefined") usuario.email = email;
             if(typeof password !== "undefined") usuario.setSenha(password);
 
-            return usuario.sabe().then(() =>{ 
+            return usuario.save().then(() =>{ 
                 return res.json({ usuario: usuario.enviarAuthJSON() });
             }).catch(next);
         }).catch(next);
     }
 
+    // update(req, res, next){
+    //     const { nome,email, password } = req.body;
+    //     Usuario.findById(req.payload.id).then((usuario) => {
+    //         if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
+    //         if(typeof nome !== "undefined") usuario.nome = nome;
+    //         if(typeof email !== "undefined") usuario.email = email;
+    //         if(typeof password !== "undefined") usuario.setSenha(password);
+
+    //         return usuario.save().then(() =>{ 
+    //             return res.json({ usuario: usuario.enviarAuthJSON() });
+    //         }).catch(next);
+    //     }).catch(next);
+    // }
+
     // DELETE /
     remove(req, res, next){
-        Usuario.findById(req,payload.id).then(usuario => {
-            if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
-            return usuario.remove().then(() => {
-                return res.json({ deletado: true});
+        Usuario.findById(req.payload.id)
+        .then(usuario => {
+            if(!usuario) 
+                return res.status(401).json({ errors: "Usuário não registrado" });
+            
+            return usuario.deleteOne()
+                .then(() => {
+                    return res.json({ deletado: true});
             }).catch(next);
         }).catch(next);
     }
@@ -92,12 +126,17 @@ class UsuarioController {
         const { email } = req.body;
         if(!email) return res.render('recovery', { error: "Preencha com seu email", sucess: null });
 
-        Usuario.findOne({ email }).then((usuario) =>{
-            if(!usuario) return res.render("recovery", { error: "Não existe usuário com este email", sucess: null });
+        Usuario.findOne({ email }).then(usuario =>{
+            if(!usuario) 
+                return res.render("recovery", { error: "Não existe usuário com este email", sucess: null });
+            
             const recoveryData = usuario.criarTokenRecuperacaoSenha();
             return usuario.save().then(() => {
-                enviarEmailRecovery({ usuario, recovery: recoveryData }, (error = null, sucess = null) => {
-                    return res.render("recovery", { error, sucess: true });
+                enviarEmailRecovery({ usuario, recovery: recoveryData }, (error, sucess) => {
+                    if (error){
+                        return.res.render("recovery", { error: "Erro ao enviar e-mail, tente novamente"})
+                    }
+                    return res.render("recovery", { error: null, sucess: true });
                 });
             }).catch(next);
         }).catch(next);

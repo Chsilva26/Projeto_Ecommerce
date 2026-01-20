@@ -1,5 +1,6 @@
 const compression = require('compression');
 const express = require('express');
+const app = express();
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,7 +8,14 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 // STARTnp 
-const app = express();
+
+app.use(compression());
+app.use(morgan('dev'));
+app.use(cors());
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 
 // AMBIENTE
 const isProduction = process.env.NODE_ENV === 'production';
