@@ -1,8 +1,8 @@
 // import usuario from "../models/usuario";
-const Usuario = require("../models/usuario")
+const Usuario = require("../models/usuario");
 
 const transporter = require("nodemailer").createTransport(require("../../config/email"));
-const { root: link} = require("../../config/index")
+const { api: link} = require("../../config/index");
 
 module.exports = ({ usuario, recovery }, ch) => {
     const message = `
@@ -32,7 +32,7 @@ module.exports = ({ usuario, recovery }, ch) => {
     if( process.send.NODE_ENV === "production"){
         transporter.sendMail(opcoesEmail, (error, info) => {
             if(error){
-                console.log(erorr);
+                console.log(error);
                 return cb("Aconteceu um erro no envio do email, tente novamente");
             } else {
                 return cb(null, "Link para redefinicao de senha foi enviado com sucesso para seu email");

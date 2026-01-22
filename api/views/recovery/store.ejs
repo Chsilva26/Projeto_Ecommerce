@@ -31,9 +31,9 @@
                         Digite aqui sua nova senha
                     </p>
 
-                    <form action="/v1/api/usuarios/recuperar-senha" method="POST"></form>
+                    <form action="/api/routes/api/v1/usuarios.js" method="POST">
                         <input type="hidden" name="token" value="<%= token >">
-                        <div class="from-group">
+                        <div class="form-group">
                             <input 
                                 type="password"
                                 name="password"
@@ -44,7 +44,7 @@
                         <button class="btn btn-primary">
                             Criar Nova Senha
                         </button>
-
+                    </form>
                 </div>
             </div>
         </div>
