@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-Schema = mongoose.Schema;   
+    Schema = mongoose.Schema;   
 const uniqueValidator = require("mongoose-unique-validator");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
@@ -16,14 +16,12 @@ const UsuarioSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         unique: true,
-        required: [true,"Email é obrigatório"],
+        required: [true,"não pode ficar vazio."],
         index: true,
-        match: [/\S+@\S+\.\S+/]
-
+        match: [/\S+@\S+\.S+/]
     },
     loja: {
-        type: String,
-        // type: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Loja",
         required: [true,"não pode ficar vazio"],
     },
@@ -49,15 +47,15 @@ UsuarioSchema.methods.setSenha = function(password){
     this.hash = crypto.pbkdf2Sync(password, this.salt, 10000,512,"sha512").toString("hex");
 };
 
-UsuarioSchema.methods.validarSenha = function(password){
+UsuarioSchema.method.validarSenha = function(password){
     const hash = crypto.pbkdf2Sync (password,this.salt, 10000, 512, "sha512").toString("hex");
     return hash === this.hash;
 };
 
 UsuarioSchema.methods.gerarToken = function(){
     const hoje = new Date();
-    const exp = new Date(hoje);
-    exp.setDate(hoje.getDate() + 15);
+    const exp = new Date(today);
+    exp.setDate(today.getDate() + 15);
 
     return jwt.sign({
         id: this._id,
@@ -71,7 +69,7 @@ UsuarioSchema.methods.enviarAuthJSON = function(){
     return {
         _id: this._id,
         nome: this.nome,
-        email: this.email,
+        email: this.nome,
         loja: this.loja,
         role: this.permissao,
         token: this.gerarToken()

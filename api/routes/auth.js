@@ -14,13 +14,13 @@ const auth = {
     required: jwt({
         secret,
         algorithms: ['HS256'],
-        userProperty: 'payload',
+        userProperty: 'payLoad',
         getToken: getTokenFromHeader
     }),
     optional: jwt({
         secret,
         algorithms: ['HS256'],
-        userProperty: 'payload',
+        userProperty: 'payLoad',
         credentialRequired: false,
         getToken: getTokenFromHeader
     })
