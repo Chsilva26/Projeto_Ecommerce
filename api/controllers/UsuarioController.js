@@ -127,13 +127,15 @@ class UsuarioController {
                         if(error){
                             return res.render("recovery", {error: "Erro ao enviar e-mail. tente novamente"})
                         }
-                        return res.render("recovery", { error: null, sucess: true });
-                });
+                        enviarEmailRecovery({ usuario, recovery: recoveryData}, (error = null, sucess = null) => {
+                            return res.render("recovery", { error, sucess: "Link enviado com sucesso" });
+                        });
+                    });
                 }).catch(next);
         }).catch(next);
     }
 
-    // ET /senha-recuperada 
+    // GET /senha-recuperada 
     showCompleteRecovery(req, res, next){
         if(!req.query.token) return res.render("recovery", { error: "Token não identificado", sucess: null });
         Usuario.findOne({ "recovery.token": req.query.token }).then(usuario => {
