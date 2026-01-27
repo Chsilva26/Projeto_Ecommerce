@@ -14,10 +14,10 @@ router.post("/registrar", usuarioController.store); //testok
 router.put("/",auth.required, usuarioController.update); //testok
 router.delete("/", auth.required, usuarioController.remove); //testok
 
-router.get("/recuperar-senha", usuarioController.showRecovery);
-router.post("/recuperar-senha", usuarioController.createRecovery);
-router.get("/senha-recuperada", usuarioController.showCompleteRecovery);
-router.post("/senha-recuperada", usuarioController.completeRecovery)
+router.get("/recuperar-senha", usuarioController.showRecovery); //testok    
+router.post("/recuperar-senha", usuarioController.createRecovery); //testok
+router.get("/senha-recuperada", usuarioController.showCompleteRecovery); //testok   
+router.post("/senha-recuperada", usuarioController.completeRecovery) //testeok
 
 router.get("/", auth.required, usuarioController.index); //testok
 router.get("/:id", auth.required, usuarioController.show); //testok

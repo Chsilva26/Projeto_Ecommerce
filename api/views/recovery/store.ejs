@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-sm-3 col-sm-offset-3">
                     <h2>Recuperar Senha</h2>
-                    <hr> /><br> />
+                    <hr><br>
 
                     <% if(sucess){ %>
                         <div class="alert alert-success">
@@ -30,9 +30,10 @@
                     <p>
                         Digite aqui sua nova senha
                     </p>
+                    <% } %>
 
-                    <form action="/api/routes/api/v1/usuarios.js" method="POST">
-                        <input type="hidden" name="token" value="<%= token >">
+                    <form action="/api/v1/usuarios/senha-recuperada" method="POST">
+                        <input type="hidden" name="token" value="<%= token %>">
                         <div class="form-group">
                             <input 
                                 type="password"
