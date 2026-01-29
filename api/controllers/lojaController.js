@@ -52,7 +52,7 @@ class LojaController {
     remove(req,res,next){
         Loja.findById(req.params.id).then(loja => {
             if(!loja) return res.status(422).send({ error: "Loja não existe"});
-            loja.remove().then(() => res.send({ deleted: true})).catch(next);
+            loja.deleteOne().then(() => res.send({ deleted: true})).catch(next);
         })
         .catch(next);
     }
