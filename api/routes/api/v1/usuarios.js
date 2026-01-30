@@ -2,11 +2,14 @@ const router = require("express").Router();
 const auth = require("../../auth");
 const UsuarioController = require("../../../controllers/UsuarioController");
 
+const Validation = require("express-validation");
+const { UsuarioValidation } = require("../../../controllers/validacoes/usuarioValidation");
+
 const usuarioController = new UsuarioController();
 
 // ROTAS PUBLICAS
 
-router.post("/login", usuarioController.login); //testok
+router.post("/login", Validation(UsuarioValidation.login), usuarioController.login); //testok
 router.post("/registrar", usuarioController.store); //testok
 
 // ROTAS PROTEGIDAS

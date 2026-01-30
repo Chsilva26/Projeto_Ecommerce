@@ -62,12 +62,8 @@ app.use((req, res, next) => {
 // ROTA - 422, 500, 401
 app.use((err, req, next) => {
     res.status(err.status || 500);
-    if(err.status !== 404) {
-        console.warn("Error: ", err.message, new Date());
-    } 
-    res.json({
-        error: err.message || "Erro interno"
-    });
+    if(err.status !== 404) console.warn("Error: ", err.message, new Date());
+    res.json(err);
 }); 
 
 // ESCUTAR
