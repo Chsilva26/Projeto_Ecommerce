@@ -10,11 +10,11 @@ const usuarioController = new UsuarioController();
 // ROTAS PUBLICAS
 
 router.post("/login", Validation(UsuarioValidation.login), usuarioController.login); //testok
-router.post("/registrar", usuarioController.store); //testok
+router.post("/registrar", Validation(UsuarioValidation.store),  usuarioController.store); //testok
 
 // ROTAS PROTEGIDAS
 
-router.put("/",auth.required, usuarioController.update); //testok
+router.put("/",auth.required, Validation(UsuarioValidation.update), usuarioController.update); //testok
 router.delete("/", auth.required, usuarioController.remove); //testok
 
 router.get("/recuperar-senha", usuarioController.showRecovery); //testok    
@@ -23,7 +23,7 @@ router.get("/senha-recuperada", usuarioController.showCompleteRecovery); //testo
 router.post("/senha-recuperada", usuarioController.completeRecovery) //testeok
 
 router.get("/", auth.required, usuarioController.index); //testok
-router.get("/:id", auth.required, usuarioController.show); //testok
+router.get("/:id", auth.required, Validation(UsuarioValidation.show), usuarioController.show); //testok
 
 
 
