@@ -1,6 +1,5 @@
 const Basejoi = require("joi");
 const Extension = require("joi-date-extensions");
-const { param } = require("../../routes/api/v1");
 const Joi = Basejoi.extend(Extension);
 
 const UsuarioValidation = {

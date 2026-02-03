@@ -18,6 +18,45 @@ const LojaValidation = {
             if(usuario.loja.toString() !== loja) return res.sendStatus(401);
             next();
         }).catch(next);
-    }
-};
+    },
+    show: {
+        params: {
+            id: Joi.string().alphanum().length(24).required()
+        }
+    },
+    store: {
+        body: {
+            nome: Joi.string().required(), 
+            cnpj: Joi.string().length(18).required(), 
+            email: Joi.string().email().required(), 
+            telefones: Joi.array().items(Joi.string()).required(),
+            endereco: Joi.object({
+                local: Joi.string().required(),
+                numero: Joi.string().required(),
+                complemento: Joi.string().optional(),
+                bairro: Joi.string().required(),
+                cidade: Joi.string().required(),
+                CEP: Joi.string().required(),
+            }).required()
+    
+        }
+    },
+    update: {
+        body:{
+            nome: Joi.string().required(), 
+            cnpj: Joi.string().length(18).required(), 
+            email: Joi.string().email().required(), 
+            telefones: Joi.array().items(Joi.string()).required(),
+            endereco: Joi.object({
+                local: Joi.string().required(),
+                numero: Joi.string().required(),
+                complemento: Joi.string().optional(),
+                bairro: Joi.string().required(),
+                cidade: Joi.string().required(),
+                CEP: Joi.string().required(),
+            }).optional()
+        }
+    }   
+}    
+
 module.exports = { LojaValidation };
