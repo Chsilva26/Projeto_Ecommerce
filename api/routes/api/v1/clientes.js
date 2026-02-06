@@ -3,25 +3,27 @@ const router = require("express").Router();
 const { LojaValidation } = require("../../../controllers/validacoes/lojaValidation");
 const { ClienteValidation } = require("../../../controllers/validacoes/clienteValidation");
 const Validation = require("express-validation");
-const auth = require("../../auth").optiona;
+const auth = require("../../auth").optional;
 
-const ClienteControler = require("../../../controllers/clienteController");
+
+const ClienteController = require("../../../controllers/ClienteController");
 const clienteController = new ClienteController();
 
+
 // ADMIN
-router.get("/", auth.required, LojaValidation.admin, clienteController.index);
+router.get("/", auth.required, LojaValidation.admin, Validation(ClienteValidation.index), clienteController.index);
 // router.get("/search/:search/pedidos", auth.required, LojaValidation.admin, clienteController.searchPedidos);
-router.get("/search/:search", auth.required, LojaValidation.admin, clienteController.search);
-router.get("/admin/:id", auth.required, LojaValidation.admin, clienteController.showAdmin);
+router.get("/search/:search", auth.required, LojaValidation.admin, Validation(ClienteValidation.search), clienteController.search);
+router.get("/admin/:id", auth.required, LojaValidation.admin, Validation(ClienteValidation.showAdmin), clienteController.showAdmin);
 // router.get("/admin/:id/pedidos", auth.required, LojaValidation.admin, clienteController.showPedidosCliente);
 
-router.put("/admin/:id", auth.required, LojaValidation.admin, clienteController.updateAdmin);
+router.put("/admin/:id", auth.required, LojaValidation.admin, Validation(ClienteValidation.updateAdmin), clienteController.updateAdmin);
 
 // CLIENTE
-router.get("/:id", auth.required, clienteController.show);
+router.get("/:id", auth.required, Validation(ClienteValidation.show), clienteController.show);
 
-router.post("/:id", auth.required, clienteController.store);
-router.put("/:id", auth.required, clienteController.put);
+router.post("/:id", Validation(ClienteValidation.store), clienteController.store);
+router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.put);
 router.delete("/:id", auth.required, clienteController.delete);
 
 module.exports = router;

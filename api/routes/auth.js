@@ -21,7 +21,7 @@ const auth = {
         secret,
         algorithms: ['HS256'],
         userProperty: 'payload',
-        credentialRequired: false,
+        credentialsRequired: false,
         getToken: getTokenFromHeader
     })
 };
