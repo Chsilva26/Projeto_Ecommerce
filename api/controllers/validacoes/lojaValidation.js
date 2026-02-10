@@ -8,12 +8,14 @@ const Joi = require("joi");
 
 const LojaValidation = {
     admin: (req,res,next) => {
+        console.log("HEADERS:", req.headers.authorization);
+        console.log("PAYLOAD:", req.payload);
         if(!req.payload.id) return res.sendStatus(401);
         const { loja } = req.query;
         if(!loja) return res.sendStatus(401);
         Usuario.findById(req.payload.id).then(usuario => {
             if(!usuario) return res.sendStatus(401);
-            if(!usuario.loja) return res.sendStatus(41);
+            if(!usuario.loja) return res.sendStatus(401);
             if(!usuario.permissao.includes("admin")) return res.sendStatus(401);
             if(usuario.loja.toString() !== loja) return res.sendStatus(401);
             next();

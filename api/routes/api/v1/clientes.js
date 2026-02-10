@@ -2,8 +2,8 @@ const router = require("express").Router();
 
 const { LojaValidation } = require("../../../controllers/validacoes/lojaValidation");
 const { ClienteValidation } = require("../../../controllers/validacoes/clienteValidation");
-const Validation = require("express-validation");
-const auth = require("../../auth").optional;
+const  Validation  = require("express-validation");
+const auth = require("../../auth");
 
 
 const ClienteController = require("../../../controllers/ClienteController");
@@ -23,7 +23,7 @@ router.put("/admin/:id", auth.required, LojaValidation.admin, Validation(Cliente
 router.get("/:id", auth.required, Validation(ClienteValidation.show), clienteController.show);
 
 router.post("/:id", Validation(ClienteValidation.store), clienteController.store);
-router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.put);
-router.delete("/:id", auth.required, clienteController.delete);
+router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.update);
+router.delete("/:id", auth.required, clienteController.remove);
 
 module.exports = router;
