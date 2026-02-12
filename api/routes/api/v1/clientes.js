@@ -22,7 +22,7 @@ router.put("/admin/:id", auth.required, LojaValidation.admin, Validation(Cliente
 // CLIENTE
 router.get("/:id", auth.required, Validation(ClienteValidation.show), clienteController.show);
 
-router.post("/:id", Validation(ClienteValidation.store), clienteController.store);
+router.post("/", Validation(ClienteValidation.store), clienteController.store);
 router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.update);
 router.delete("/:id", auth.required, clienteController.remove);
 

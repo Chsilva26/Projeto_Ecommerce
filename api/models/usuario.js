@@ -22,7 +22,7 @@ const UsuarioSchema = new mongoose.Schema({
     },
     loja: {
         type: Schema.Types.ObjectId,
-        type: String,
+        // type: String,
         ref: "Loja",
         required: [true,"não pode ficar vazio"],
     },
@@ -54,16 +54,19 @@ UsuarioSchema.methods.validarSenha = function(password){
 };
 
 UsuarioSchema.methods.gerarToken = function(){
-    const hoje = new Date();
-    const exp = new Date(hoje);
-    exp.setDate(hoje.getDate() + 15);
+    // const hoje = new Date();
+    // const exp = new Date(hoje);
+    // exp.setDate(hoje.getDate() + 15);
 
     return jwt.sign({
         id: this._id,
         email: this.email,
         nome: this.nome,
-        exp: parseFloat(exp.getTime() / 1000, 10)
-    }, secret);
+        // exp: parseFloat(exp.getTime() / 1000)
+    }, 
+    secret, 
+    
+    {expiresIn: "15d"});
 };
 
 UsuarioSchema.methods.enviarAuthJSON = function(){
