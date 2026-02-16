@@ -8,17 +8,22 @@ const Joi = require("joi");
 
 const LojaValidation = {
     admin: (req,res,next) => {
+        console.log("PAYLOAD:", req.payload.id);
+        console.log("QUERY:", req.query);
         
-        if(!req.auth || !req.auth.id) return res.sendStatus(401);
+        if(!req.payload || !req.payload.id) return res.sendStatus(401);
         const { loja } = req.query;
         if(!loja) return res.sendStatus(401);
-        Usuario.findById(req.auth.id).then(usuario => {
-            if(!usuario) return res.sendStatus(401);
-            if(!usuario.loja) return res.sendStatus(401);
-            if(!usuario.permissao.includes("admin")) return res.sendStatus(401);
-            if(usuario.loja.toString() !== loja) return res.sendStatus(401);
-            next();
-        }).catch(next);
+
+        Usuario.findById(req.payload.id)
+            .then(usuario => {
+                if(!usuario) return res.sendStatus(401);
+                if(!usuario.loja) return res.sendStatus(401);
+                if(!usuario.permissao.includes("admin")) return res.sendStatus(401);
+                if(usuario.loja.toString() !== loja) return res.sendStatus(401);
+                req.loja = usuario.loja
+                next();
+            }).catch(next);
     },
     show: {
         params: {

@@ -75,7 +75,7 @@ const ClienteValidation = {
             loja: Joi.string().alphanum().length(24).required()
         },
         params: {
-            search: Joi.string().alphanum().length(24).required()
+            id: Joi.string().alphanum().length(24).required()
         },
         body: {
             password: Joi.string().optional(),
