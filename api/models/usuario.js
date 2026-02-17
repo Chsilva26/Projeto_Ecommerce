@@ -63,7 +63,7 @@ UsuarioSchema.methods.gerarToken = function(){
         email: this.email,
         nome: this.nome,
         loja: this.loja,
-        exp: parseFloat(exp.getTime() / 1000)
+        // exp: parseFloat(exp.getTime() / 1000)
     }, 
     secret, 
     

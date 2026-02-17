@@ -8,8 +8,8 @@ const Joi = require("joi");
 
 const LojaValidation = {
     admin: (req,res,next) => {
-        console.log("PAYLOAD:", req.payload.id);
-        console.log("QUERY:", req.query);
+        // console.log("PAYLOAD:", req.payload.id);
+        // console.log("QUERY:", req.query);
         
         if(!req.payload || !req.payload.id) return res.sendStatus(401);
         const { loja } = req.query;

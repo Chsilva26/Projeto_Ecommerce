@@ -47,22 +47,13 @@ class UsuarioController {
     }
 
     // PUT /
-    
-    // update(req, res, next){
-    //     const { nome,email, password } = req.body;
-    //     Usuario.findById(req.payload.id).then((usuario) => {
-    
         update(req, res, next) {
-        console.log('req.headers:', req.headers);
-        console.log('req.body:', req.body);
-        console.log('req.user || req.payload:', req.user || req.payload);
-        
+ 
         const { nome, email, password } = req.body || {};
         
-        if (!req.user && !req.payload) {
+        if(!req.payload) 
             return res.status(401).json({ error: 'Token não encontrado ou inválido' });
-        }
-
+        
         const userId = (req.payload ? req.payload.id : req.user.id);
         
         Usuario.findById(userId).then((usuario) => {
