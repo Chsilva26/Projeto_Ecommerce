@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { loja } = require("../../config");
+const { loja } = require("../config");
 
 const Categoria = mongoose.model("Categoria");
 

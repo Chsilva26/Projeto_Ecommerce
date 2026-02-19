@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { type } = require("os");
 const { timeStamp } = require("console");
-const secret = require("../../config").secret;
+const secret = require("../config").secret;
 
 const UsuarioSchema = new mongoose.Schema({
     nome: {

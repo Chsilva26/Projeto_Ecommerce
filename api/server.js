@@ -25,7 +25,7 @@ app.use("/public", express.static(__dirname + "/public"));
 app.use("/public/images", express.static(__dirname + "/public/images"));
 
 // SETUP MONGODB
-const dbs = require("../config/database.json")
+const dbs = require("./config/database.json")
 dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, {useNewUrlParser: true});
 
