@@ -6,6 +6,7 @@ const CategoriaSchema = Schema({
     codigo: { type: String, required: true },
     disponibilidade: { type: Boolean, default: true },
     produtos: { type: [{type: Schema.Types.ObjectId, ref: "Produto"}] },
+    loja: { type: Schema.Types.ObjectId, ref: "Loja"}
 }, {timetamps: true});
 
 module.exports = mongoose.model("Categoria", CategoriaSchema);

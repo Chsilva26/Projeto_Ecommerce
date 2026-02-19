@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { loja } = require("../../config");
 
 const Categoria = mongoose.model("Categoria");
 
@@ -13,10 +14,15 @@ class CategoriaController {
 
     // GET /disponiveis
     indexDisponiveis(req,res,next){
-        Categoria.find({ loja: req.query.loja, disponibilidade: true })
+        Categoria.find({ 
+            loja: req.query.loja, 
+            disponibilidade: true, 
+        })
         .select("_id produtos nome codigo loja")
         .then((categorias) => res.send({ categorias }))
         .catch(next);
+        // Categoria.find().then(console.log);
+        
     }
 
     // GET /:id show
@@ -32,7 +38,19 @@ class CategoriaController {
         const { nome, codigo } = req.body;
         const { loja } = req.query;
 
-        const categoria = new Categoria ({ nome, codigo, loja, disponibilidade: true});
+        console.log("loja recebida: ", loja)
+        console.log("loja recebida: ", req.query.loja)
+
+        if(!loja) 
+            return res.status(400).send({ error: "loja não informada"})
+
+        const categoria = new Categoria ({ 
+            nome, 
+            codigo, 
+            loja: new mongoose.Types.ObjectId(loja), 
+            disponibilidade: true
+        });
+        
         categoria.save()
         .then(() => res.send({ categoria }))
         .catch(next);
@@ -59,8 +77,8 @@ class CategoriaController {
     // DELETE /:id /remove
     async remove(req,res,next){
         try {
-            const categoria = await Categoria.findById(req.query.id);
-            await categoria.remove();
+            const categoria = await Categoria.findById(req.params.id);
+            await categoria.deleteOne();
             return res.send({ deletado: true});
         }catch(e){
             next(e);
