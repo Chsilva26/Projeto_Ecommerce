@@ -86,8 +86,8 @@ class ProdutoController {
                 
             }
 
-            await produto.sabve();
-            return res.send({ prduto });
+            await produto.save();
+            return res.send({ produto });
 
         }catch(e){
             next(e);
@@ -176,7 +176,7 @@ class ProdutoController {
         const limit = Number(req.query.limit) || 0;
         const search = new RegExp(req.params.search, "i");
         try {
-            const produtos = await Produtos.paginate(
+            const produtos = await Produto.paginate(
                 {
                     loja: req.query.loja,
                     $or: [
@@ -197,7 +197,7 @@ class ProdutoController {
     async show(req,res,next){
         try {
             const produtos = await Produto.findById(req.params.id).populate(["avaliacoes","variacoes", "loja"]);
-            return res.send({ produto });
+            return res.send({ produtos });
         } catch(e){
             next(e);
         }

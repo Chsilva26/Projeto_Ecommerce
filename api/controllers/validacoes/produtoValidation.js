@@ -77,3 +77,5 @@ const ProdutoValidation = {
     },
     
 }
+
+module.exports = { ProdutoValidation };
