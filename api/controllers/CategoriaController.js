@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { loja } = require("../config");
 
 const Categoria = mongoose.model("Categoria");
+const Produto = mongoose.model("Produto");
 
 class CategoriaController {
     // GET / index
@@ -88,11 +89,11 @@ class CategoriaController {
     // *** PRODUTOS ***
     // GET /:id/produtos - showProdutos
     async showProdutos(req,res,next){
-        const { offset, limit } = req.body;
+        const { offset, limit } = req.query;
         try {
             const produtos = await Produto.paginate(
                 { categoria: req.params.id },
-                { offset: Number(offset) || 30, limit: Number(limit) || 30}
+                { offset: Number(offset) || 0, limit: Number(limit) || 30}
             );
             return res.send({ produtos });
         } catch(e){
@@ -114,8 +115,8 @@ class CategoriaController {
                     { _id: { $in: produtos } } 
                 ]
             });
-            _produtos = await Promise.all(this._produtos.map(async (produto) => {
-                if(!produto.includes(produto._id.toString())) {
+            _produtos = await Promise.all(_produtos.map(async (produto) => {
+                if(!produtos.includes(produto._id.toString())) {
                     produto.categoria = null;
                 } else {
                     produto.categoria = req.params.id;
@@ -123,7 +124,7 @@ class CategoriaController {
                 await produto.save();
                 return produto;
             }));
-
+            
             const resultado = await Produto.paginate({ categoria: req.params.id }, { offset: 0, limit: 30});
             return res.send({ produtos: resultado });
         } catch(e){

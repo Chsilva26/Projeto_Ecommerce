@@ -23,15 +23,15 @@ class ProdutoController {
 
     // POST /- store
     async store(req,res,next){
-        const { titulo, descricao, categoria, categoriaId, preco, promocao, sku} = req.body;
+        const { titulo, descricao, categoria: categoriaId, preco, promocao, sku} = req.body;
         const { loja } = req.query;
 
         try {
             const produto = new Produto({
                 titulo, 
+                disponibilidade: true, 
                 descricao, 
-                categoria, 
-                categoriaId, 
+                categoria: categoriaId, 
                 preco, 
                 promocao, 
                 sku,
@@ -43,6 +43,8 @@ class ProdutoController {
 
             await produto.save();
             await categoria.save();
+
+            return res.send ({ produto });
         }catch(e){
             next(e);
         }
@@ -51,14 +53,12 @@ class ProdutoController {
 
     // PUT /:id
     async update(req,res,next){
-        const { 
-            
-         } = req.body;
+        const { titulo, descricao, disponibilidade, categoria, preco, promocao, sku } = req.body;
         const { loja } = req.query;
 
         try {
             const produto = await Produto.findById(req.params.id);
-            if(!produto) return res.stats(400).send({ error: "Produto não encontrado." });
+            if(!produto) return res.status(400).send({ error: "Produto não encontrado." });
 
             if ( titulo ) produto.titulo = titulo;
             if ( descricao ) produto.descricao = descricao;
@@ -126,7 +126,7 @@ class ProdutoController {
                 await categoria.save();
             }
 
-            await produto.remove();
+            await produto.deleteOne();
             return res.send({ deleted: true });
 
         }catch(e){
@@ -173,7 +173,7 @@ class ProdutoController {
     // get /search/:search - search
     async search(req,res,next){
         const offset = Number(req.query.offset) || 0;
-        const limit = Number(req.query.limit) || 0;
+        const limit = Number(req.query.limit) || 30;
         const search = new RegExp(req.params.search, "i");
         try {
             const produtos = await Produto.paginate(
@@ -196,7 +196,10 @@ class ProdutoController {
     // GET /:id - show
     async show(req,res,next){
         try {
-            const produtos = await Produto.findById(req.params.id).populate(["avaliacoes","variacoes", "loja"]);
+            const produtos = await Produto.findById(req.params.id).populate([
+                // "avaliacoes",
+                // "variacoes", 
+                "loja"]);
             return res.send({ produtos });
         } catch(e){
             next(e);

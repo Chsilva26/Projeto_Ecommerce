@@ -6,13 +6,13 @@ const ProdutoSchema = Schema({
     titulo: { type: String, required: true},
     disponibilidade: { type: Boolean, default: true},
     descricao: { type: String, required: true},
-    preco: { type: Number, required: true},
+    fotos: { type: Array, default: [] },
     preco: { type: Number },
-    sku: { type: Number, required: true},
+    sku: { type: String, required: true},
     categoria: { type: Schema.Types.ObjectId, ref:"Categoria" },
     loja: { type: Schema.Types.ObjectId, ref:"Loja" },
-    avaliacoes: { type: Schema.Types.ObjectId, ref:"Avaliacoes" },
-    variacoes: { type: Schema.Types.ObjectId, ref:"Variacoes" },
+    avaliacoes: [{ type: Schema.Types.ObjectId, ref:"Avaliacoes" }],
+    variacoes: [{ type: Schema.Types.ObjectId, ref:"Variacoes" }],
 }, { timestamps: true 
     
 });

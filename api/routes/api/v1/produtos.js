@@ -18,8 +18,8 @@ router.put("/images/:id", auth.required, LojaValidation.admin, Validation(Produt
 router.delete("/:id", auth.required, LojaValidation.admin , Validation(ProdutoValidation.remove), produtoController.remove);
 
 // CLIENTE/VISITANTES
-router.get("/", Validation(ProdutoValidation.index), produtoController.index);
-router.get("/disponiveis", Validation(ProdutoValidation.indexDisponiveis), produtoController.indexDisponiveis);
+router.get("/", Validation(ProdutoValidation.index), produtoController.index); 
+router.get("/disponiveis", Validation(ProdutoValidation.indexDisponiveis), produtoController.indexDisponiveis); 
 router.get("/search/:search", Validation(ProdutoValidation.search), produtoController.search);
 router.get("/:id", Validation(ProdutoValidation.show), produtoController.show);
 
