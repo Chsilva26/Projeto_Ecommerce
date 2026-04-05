@@ -15,6 +15,6 @@ router.get("/:id", Validation(AvaliacaoValidation.show), avaliacaoController.sho
 router.post("/", auth.required, Validation(AvaliacaoValidation.store), avaliacaoController.store);
 
 // ADMIN/
-router.get("/:id", auth.required, LojaValidation.admin, Validation(AvaliacaoValidation.remove), avaliacaoController.remove);
+router.delete("/:id", auth.required, LojaValidation.admin, Validation(AvaliacaoValidation.remove), avaliacaoController.remove);
 
 module.exports = router;

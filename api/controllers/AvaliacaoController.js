@@ -19,7 +19,7 @@ class AvaliacaoController {
     // GET /:id
     async show(req,res,next){
         const { loja, produto } = req.query;
-        const { id } = req.params;
+        const { id: _id } = req.params;
         try {
             const avaliacao = await Avaliacao.findOne({ _id, loja, produto});
             return res.send({ avaliacao });
@@ -36,6 +36,7 @@ class AvaliacaoController {
             const avaliacao = new Avaliacao({ nome, texto, pontuacao, loja, produto});
 
             const _produto = await Produto.findById(produto);
+
             if(!_produto) return res.status(422).send({ error: "Produto não existe"});
             _produto.avaliacoes.push(avaliacao._id);
 
@@ -53,10 +54,10 @@ class AvaliacaoController {
             const avaliacao = await Avaliacao.findById(req.params.id);
 
             const produto = await Produto.findById(avaliacao.produto);
-            produto.avaliacao = produto.avaliacao.filter(item => item.toString() !== avaliacao._id.toString());
+            produto.avaliacoes = produto.avaliacoes.filter(item => item.toString() !== avaliacao._id.toString());
             await produto.save();
 
-            await avaliacao.remove();
+            await avaliacao.deleteOne();
             return res.send({ deletado: true });
 
         }catch(e){
