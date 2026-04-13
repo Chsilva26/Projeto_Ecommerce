@@ -1,10 +1,10 @@
-#Ecommerce API – Node.js
+# Ecommerce API – Node.js
 
 Este repositório contém o backend de um projeto de Ecommerce, desenvolvido com Node.js, React, Express e MongoDB, seguindo boas práticas de organização, autenticação e estruturação de código.
 
 ---
 
-#Tecnologias Utilizadas
+# Tecnologias Utilizadas
 
 -Node.js
 -Express
@@ -19,7 +19,7 @@ Cors
 
 ---
 
-#Autenticação e Segurança
+# Autenticação e Segurança
 
 -Autenticação via JWT
 -Middleware para rotas protegidas
@@ -45,8 +45,7 @@ Usuários
 
 ---
 
-
-Em desenvolvimento
+# Em desenvolvimento
 
 #Próximos módulos planejados:
 
