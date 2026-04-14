@@ -212,9 +212,7 @@ class ProdutoController {
     // GET /:id/avaliacoes - showAvaliacoes
     async showAvaliacoes(req,res,next){
         try {
-            console.log("Produto:", req.params.id)
             const avaliacoes = await Avaliacao.find({ produto: req.params.id });
-            console.log("Resultado: ", avaliacoes)
             return res.send({ avaliacoes });
         }catch(e){
             next(e);

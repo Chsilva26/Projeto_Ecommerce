@@ -47,14 +47,11 @@ Usuários
 
 # Em desenvolvimento
 
-#Próximos módulos planejados:
+Próximos módulos planejados:
 
 Produtos
-
 Categorias
-
 Pedidos
-
 Pagamentos
 
 
