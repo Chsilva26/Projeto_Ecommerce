@@ -24,7 +24,7 @@ class VariacaoController {
             const variacao = await Variacao.findOne({ _id, loja, produto });
             return res.send({ variacao });
         } catch(e){
-            next(e)
+            next(e);
         }
     }
 
@@ -47,21 +47,68 @@ class VariacaoController {
         }
     }
 
+    // PUT / - update
+    async update(req,res,next){
+        const { codigo, disponibilidade, nome, preco, promocao, fotos, entrega, quantidade } = req.body;
+        const { loja, produto } = req.query;
+        const { id:_id } = req.params;
+        try {
+            const variacao = await Variacao.findOne({ loja, produto, _id });
+            if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
+
+            if( codigo ) variacao.codigo = codigo;    
+            if( disponibilidade !== undefined ) variacao.disponibilidade = disponibilidade;    
+            if( nome ) variacao.nome = nome;    
+            if( preco ) variacao.preco = preco;    
+            if( promocao ) variacao.promocao = promocao;    
+            if( entrega ) variacao.entrega = entrega;    
+            if( quantidade ) variacao.quantidade = quantidade;    
+
+            await variacao.save();
+            return res.send({ variacao });
+        }catch(e){
+            next(e);
+        }
+    }
+
+    // PUT /images/:id - updateImages
+    async uploadImages(req, res, next){
+        const { loja, produto } = req.query;
+        const { id:_id } = req.params;
+
+        try {
+            const variacao = await Variacao.findOne({ loja, produto, _id });
+            if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
+
+            const novasImagens = req.files.map(item => item.filename);
+            variacao.fotos = variacao.fotos.filter(item => item.concat(novasImagens));
+
+            await variacao.save();
+            return res.send({ variacao });
+        }catch(e){
+            next(e);
+        }
+    }
+
     // DELETE /:id - remove
     async remove(req,res,next){
-        try{
-            const avaliacao = await Avaliacao.findById(req.params.id);
+        const { loja, produto } = req.query;
+        const { id:_id } = req.params;
+        try {
+            const variacao = await Variacao.findOne({ loja, produto, _id });
+            if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
 
-            const produto = await Produto.findById(avaliacao.produto);
-            produto.avaliacao = produto.avaliacoes.filter(item => item.toString() !== avaliacao._id.toString());
-            await avaliacao.save();
+            const produto = await Produto.findById(variacao.produto);
+            produto.variacoes = produto.variacoes.filter(item => item.toString() !== variacao._id.toString());
+            await _produto.save();
 
-            await avaliacao.deleteOne();
+            await variacao.deleteOne();
             return res.send({ deletado: true});
         }catch(e){
             next(e);
         }
     }
+
 }
 
 module.exports = AvaliacaoController;
