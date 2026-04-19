@@ -6,3 +6,4 @@ require("./cliente");
 require("./categorias");
 require("./produto");
 require("./avaliacao");
+require("./variacao");

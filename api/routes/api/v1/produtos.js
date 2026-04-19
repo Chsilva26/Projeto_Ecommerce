@@ -3,8 +3,9 @@ const router = require("express").Router();
 const ProdutoController = require("../../../controllers/ProdutoController");
 
 const { LojaValidation } = require("../../../controllers/validacoes/lojaValidation");
-const Validation = require("express-validation");
 const {ProdutoValidation} = require("../../../controllers/validacoes/produtoValidation");
+const Validation = require("express-validation");
+
 const auth = require("../../auth");
 const upload = require("../../../config/multer");
 

@@ -1,5 +1,5 @@
-const { timestamp } = require("joi/lib/types/date");
-const { required } = require("joi/lib/types/lazy");
+// const { timestamp } = require("joi/lib/types/date");
+// const { required } = require("joi/lib/types/lazy");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -17,7 +17,7 @@ const VariacaoSchema = Schema  ({
                     larguraCm:{ type: Number},
                     profundidadeCm:{ type: Number},
                 },
-                require: true
+                required: true
             },
             pesoKg: { type: Number, required: true},
             freteGratis: { type: Boolean, default: false}
@@ -25,8 +25,8 @@ const VariacaoSchema = Schema  ({
     },
     quantidade: { type: Number, default: 0},
     produto: { type: Schema.Types.ObjectId, ref: "Produto", required: true},
-    loja: { type: Schema.Types.ObjectId, ref: "loja", required: true},
+    loja: { type: Schema.Types.ObjectId, ref: "Loja", required: true},
 
-},{ timestamp: true });
+},{ timestamps: true });
 
 module.exports = mongoose.model("Variacao", VariacaoSchema);
