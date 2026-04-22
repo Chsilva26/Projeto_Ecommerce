@@ -111,4 +111,4 @@ class VariacaoController {
 
 }
 
-module.exports = AvaliacaoController;
+module.exports = VariacaoController;
