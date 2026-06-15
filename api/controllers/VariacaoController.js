@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Avaliacao = mongoose.model("Avaliacao");
+const Variacao = mongoose.model("Variacao");
 const Produto = mongoose.model("Produto");
 
 class VariacaoController {
@@ -9,10 +9,10 @@ class VariacaoController {
     async index(req,res,next){
         const { loja, produto } = req.query;
         try {
-            const variacoes = await Variacao.find([ loja, produto]);
+            const variacoes = await Variacao.find({loja, produto});
             return res.send({ variacoes });
         } catch(e){
-            next(n);
+            next(e);
         }
     }
 
@@ -33,11 +33,12 @@ class VariacaoController {
         const { codigo, nome, preco, promocao, fotos, entrega, quantidade } = req.body;
         const { loja, produto } = req.query;
         try {
-            const variacao = new Variacao({ codigo, nome, preco, promocao, fotos, entrega, quantidade, loja, produtos });
+            const variacao = new Variacao({ codigo, nome, preco, promocao, fotos, entrega, quantidade, loja, produto });
 
             const _produto =  await Produto.findById(produto);
+            
             if(!_produto) return res.status(400).send({ error: "Produto não encontrado"});
-            _produto.variacao.push(variacao._id);
+            _produto.variacoes.push(variacao._id);
 
             await _produto.save();
             await variacao.save();
@@ -72,7 +73,7 @@ class VariacaoController {
     }
 
     // PUT /images/:id - updateImages
-    async uploadImages(req, res, next){
+    async updateImages(req, res, next){
         const { loja, produto } = req.query;
         const { id:_id } = req.params;
 
@@ -81,7 +82,7 @@ class VariacaoController {
             if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
 
             const novasImagens = req.files.map(item => item.filename);
-            variacao.fotos = variacao.fotos.filter(item => item.concat(novasImagens));
+            variacao.fotos = variacao.fotos.filter(item => item).concat(novasImagens);
 
             await variacao.save();
             return res.send({ variacao });
@@ -98,9 +99,12 @@ class VariacaoController {
             const variacao = await Variacao.findOne({ loja, produto, _id });
             if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
 
-            const produto = await Produto.findById(variacao.produto);
-            produto.variacoes = produto.variacoes.filter(item => item.toString() !== variacao._id.toString());
-            await _produto.save();
+            const _produto = await Produto.findById(variacao.produto);
+            if(_produto){
+                _produto.variacoes = _produto.variacoes.filter(item => item.toString() !== variacao._id.toString());
+                await _produto.save();
+            }
+            
 
             await variacao.deleteOne();
             return res.send({ deletado: true});

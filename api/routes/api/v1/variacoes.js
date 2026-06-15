@@ -9,16 +9,16 @@ const upload = require("../../../config/multer");
 const { VariacaoValidation } = require("../../../controllers/validacoes/variacaoValidation");
 const Validation = require("express-validation");
 
-const variacaoControoler = new VariacaoController();
+const variacaoController = new VariacaoController();
 
 // CLIENTES
-router.get("/", Validation(VariacaoValidation.index), variacaoControoler.index);
-router.get("/:id",Validation(VariacaoValidation.show),variacaoControoler.show);
+router.get("/", Validation(VariacaoValidation.index), variacaoController.index);
+router.get("/:id",Validation(VariacaoValidation.show),variacaoController.show);
 
 // ADMINS
-router.post("/", auth.required, LojaValidation.admin, Validation(VariacaoValidation.store), variacaoControoler.store);
-router.put("/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.update), variacaoControoler.update);
-router.put("/images/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.updateImages), upload.array("files", 4), variacaoControoler.update);
-router.delete("/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.remove), variacaoControoler.remove);
+router.post("/", auth.required, LojaValidation.admin, Validation(VariacaoValidation.store), variacaoController.store);
+router.put("/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.update), variacaoController.update);
+router.put("/images/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.updateImages), upload.array("files", 4), variacaoController.updateImages);
+router.delete("/:id", auth.required, LojaValidation.admin, Validation(VariacaoValidation.remove), variacaoController.remove);
 
 module.exports = router;
