@@ -7,3 +7,9 @@ require("./categorias");
 require("./produto");
 require("./avaliacao");
 require("./variacao");
+
+
+require("./registroPedido");
+
+
+

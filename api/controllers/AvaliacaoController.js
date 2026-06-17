@@ -52,10 +52,13 @@ class AvaliacaoController {
     async remove(req,res,next){
         try {
             const avaliacao = await Avaliacao.findById(req.params.id);
+            if(!avaliacao) return res.status(400).send({ error: "Avaliação não encontrada" });
 
-            const produto = await Produto.findById(avaliacao.produto);
-            produto.avaliacoes = produto.avaliacoes.filter(item => item.toString() !== avaliacao._id.toString());
-            await produto.save();
+            const _produto = await Produto.findById(avaliacao.produto);
+            if(_produto){
+                _produto.avaliacoes = _produto.avaliacoes.filter(item => item.toString() !== avaliacao._id.toString());
+                await _produto.save();
+            }
 
             await avaliacao.deleteOne();
             return res.send({ deletado: true });
