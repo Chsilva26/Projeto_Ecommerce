@@ -8,6 +8,9 @@ require("./produto");
 require("./avaliacao");
 require("./variacao");
 
+require("./pedido");
+require("./pagamento");
+require("./entrega");
 
 require("./registroPedido");
 
