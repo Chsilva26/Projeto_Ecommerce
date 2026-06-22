@@ -36,3 +36,10 @@ router.delete("/:id", auth.required,  pedidoController.remove);
 // -- Carrinho
 router.get("/:id/carrinho", auth.required,  pedidoController.showCarrinhoPedido);
 module.exports = router;
+
+// == entrega
+
+
+// -- pagamento
+
+module.exports = router;
