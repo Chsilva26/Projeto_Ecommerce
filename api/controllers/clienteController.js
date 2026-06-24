@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const cliente = require("../models/cliente");
 
+const Pedido = mongoose.model("Pedido");
+const Produto = mongoose.model("Produto");
+const Variacao = mongoose.model("Variacao");
+
 const Cliente = mongoose.model("Cliente");
 const Usuario = mongoose.model("Usuario");
 
@@ -23,8 +27,26 @@ class ClienteController {
     }
         
     // GET /search/:search/pedidos
-    searchPedidos(req,res,next){
-        return res.status(400).send({ error: "Em desenvolvimento."})
+    async searchPedidos(req,res,next){
+        const { offset, limit, loja } = req.query;
+        try {
+            const search = new RegExp(req.params.search, "i");
+            const clientes = await Cliente.find({ loja, nome: { $regex: search} });
+            const pedidos = await Pedido.paginate(
+                { loja, cliente : { $in: cliente.map(item => item._id) } },
+                { offset, limit, populate: ["cliente", "pagamento", "entrega"] }
+            );
+            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+                pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
+                    item.produto = await Produto.findById(item.produto);
+                    item.variacao = await Variacao.findById(item.variacao);
+                    return item;
+                }));
+                return pedido;
+            }));
+        } catch(e){
+            next(e);
+        }
     }
 
     // GET /search/:search
@@ -53,9 +75,31 @@ class ClienteController {
         }
     }
     // GET /admin/:id/pedidos
-    async showPedidosCliente(req,res,next){
-        return res.status(400).send({ error: "Em desenvolvimento."})
-    }
+    async showPedidosCliente (req, res, next){
+            const { offset, limit, loja} = req.query;
+            try {
+                const cliente = await Cliente.findById({ usuario: req.payload.id });
+                const pedidos = await Pedido.paginate(
+                    { loja, cliente: req.params.id },
+                    { 
+                        offset: Number(offset || 0),  
+                        limit: Number(offset || 30), 
+                        populate: ["cliente", "pagamento", "entrega"]
+                    }
+                );
+                pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+                    pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
+                        item.produto = await Produto.findById(item.produto);
+                        item.variacao = await Variacao.findById(item.variacao);
+                        return item;
+                    }));
+                    return pedido;
+                }));
+                return res.send({ pedidos });
+            } catch(e){
+                next(e);
+            }
+        }
 
     // PUT /admin/:id
     async updateAdmin(req,res,next){

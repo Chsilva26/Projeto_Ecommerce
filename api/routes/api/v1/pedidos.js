@@ -13,13 +13,8 @@ router.get("/admin/:id", auth.required, LojaValidation.admin, pedidoController.s
 
 router.delete("/admin/:id", auth.required, LojaValidation.admin, pedidoController.removeAdmin);
 
-// -- Cliente
-router.get("/admin/:id/cliente", auth.required, LojaValidation.admin, pedidoController.showClientePedidosAdmin);
-module.exports = router;
-
 // -- Carrinho
 router.get("/admin/:id/carrinho", auth.required, LojaValidation.admin, pedidoController.showCarrinhoPedidoAdmin);
-module.exports = router;
 
 // == entrega
 
@@ -35,7 +30,6 @@ router.delete("/:id", auth.required,  pedidoController.remove);
 
 // -- Carrinho
 router.get("/:id/carrinho", auth.required,  pedidoController.showCarrinhoPedido);
-module.exports = router;
 
 // == entrega
 

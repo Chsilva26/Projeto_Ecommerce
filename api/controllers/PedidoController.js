@@ -11,7 +11,6 @@ const Usuario = mongoose.model("Usuario");
 const CarrinhoValidation = require("./validacoes/carrinhoValidation");
 const variacao = require("../models/variacao");
 const { off } = require("../models/usuario");
-const usuario = require("../models/usuario");
 
 class PedidoController {
     //ADMiN
@@ -140,12 +139,45 @@ class PedidoController {
 
     // post /store
     async store (req,res, next){
-        const {cliente, carrinho, pagamento, entrega} = req.body;
+        const { carrinho, pagamento, entrega} = req.body;
         const { loja } = req.query;
 
         try {
 
             // CHECAR DADOS DO CARRINHO
+            if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Carrinho inválido!"});
+            
+            // CHECAR DADOS DO ENTREGA
+            // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
+            
+            // CHECAR DADOS DO PAGAMENTO
+            // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
+
+            const cliente = await Cliente.findOne({ usuario: req.payload.id });
+
+            const novoPagamento = new Pagamento({
+                valor: pagamento.valor,
+                forma: pagamento.forma,
+                status: "iniciando",
+                payload: pagamento,
+                loja
+            });
+            const novaEntrega = new Entrega({
+                status: "iniciando",
+                custo: entrega.custo,
+                prazo: entrega.prazo,
+                payload: entrega,
+                loja
+            });
+            novoPagamento.pedido = pedido._id;
+            novaEntrega.pedido = entrega._id;
+
+            await pedido.save();
+            await novoPagamento.save();
+            await novaEntrega.save();
+
+            // Notificar via email = Cliente e admin = novo pedido
+            return res.send({ pedido: Object.assign({}, pedido, {entrega: novaEntrega, pagamento: novoPagamento, cliente }) });
 
         }catch(e){
             next(e);
