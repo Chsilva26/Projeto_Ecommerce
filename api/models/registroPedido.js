@@ -6,10 +6,11 @@ const mongoose = require("mongoose");
     Schema = mongoose.Schema;
 
 const RegistroPredidoSchema = Schema({
-    pedido: {type: Schema.Types.ObjectId, ref: "Pedido", required: true},
-    tipo: {type: String, required: true},
-    situacao: {type: String, required: true},
-    data: {type: Date, default: date.now}
+    pedido: { type: Schema.Types.ObjectId, ref: "Pedido", required: true },
+    tipo: { type: String, required: true },
+    situacao: { type: String, required: true },
+    data: { type: Date, default: date.now },
+    payload: { type: Object }
 }, {timestamp: true});
 
 module.exports = mongoose.model("RegistroPedido", RegistroPredidoSchema);
