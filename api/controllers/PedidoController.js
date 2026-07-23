@@ -106,16 +106,20 @@ class PedidoController {
     async index (req, res, next){
         const { offset, limit, loja} = req.query;
         try {
-            const cliente = await Cliente.findById({ usuario: req.payload.id });
+            const cliente = await Cliente.findOne({ usuario: req.payload.id });
+            // const clientes = await Cliente.find();
+
+            // console.log(JSON.stringify(clientes, null, 2));
             const pedidos = await Pedido.paginate(
-                { loja, cliente: cliente._id },
+                { loja, cliente: Cliente._id },
                 { 
                     offset: Number(offset || 0),  
-                    limit: Number(offset || 30), 
+                    limit: Number(limit || 30), 
                     populate: ["cliente", "pagamento", "entrega"]
                 }
+                
             );
-            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedido) => {
                 pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
                     item.produto = await Produto.findById(item.produto);
                     item.variacao = await Variacao.findById(item.variacao);
@@ -132,7 +136,7 @@ class PedidoController {
     // get /:id show
     async show (req, res, next){ 
         try{
-            const cliente = await Cliente.findById({ usuario: req.payload.id });
+            const cliente = await Cliente.findOne({ usuario: req.payload.id });
             const pedido = await Pedido.findOne({ cliente: cliente._id, id: req.params.id }).populate(["cliente", "pagamento", "entrega"]);
             
             pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
@@ -154,7 +158,7 @@ class PedidoController {
         try {
 
             // CHECAR DADOS DO CARRINHO
-            if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Carrinho inválido!"});
+            if(!await CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Carrinho inválido!"});
             
             // CHECAR DADOS DO ENTREGA
             // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
@@ -163,6 +167,7 @@ class PedidoController {
             // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
 
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
+            console.log(cliente)
 
             const novoPagamento = new Pagamento({
                 valor: pagamento.valor,
@@ -175,9 +180,19 @@ class PedidoController {
                 status: "iniciando",
                 custo: entrega.custo,
                 prazo: entrega.prazo,
+                tipo: entrega.tipo,
                 payload: entrega,
                 loja
             });
+            const pedido = new Pedido({
+                cliente: cliente._id,
+                carrinho,
+                pagamento: novoPagamento._id,
+                entrega: novaEntrega._id,
+                loja
+            });                
+
+            
             novoPagamento.pedido = pedido._id;
             novaEntrega.pedido = entrega._id;
 
@@ -191,8 +206,10 @@ class PedidoController {
                 situacao: "pedido_criado"
             });
             await registroPedido.save();
+
             // Notificar via email = Cliente e admin = novo pedido
-            return res.send({ pedido: Object.assign({}, pedido, {entrega: novaEntrega, pagamento: novoPagamento, cliente }) });
+            
+            return res.send({ pedido: Object.assign({}, pedido._doc, {entrega: novaEntrega, pagamento: novoPagamento, cliente }) });
 
         }catch(e){
             next(e);

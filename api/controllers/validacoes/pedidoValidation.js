@@ -49,24 +49,25 @@ const PedidoValidation = {
     },
     store: {
         query: {
-            id: joi.string().alphanum().length(24).required()
+            loja: joi.string().alphanum().length(24).required()
+        }, 
+        body: {
+            carrinho: joi.array().items(joi.object({
+                produto: joi.string().alphanum().length(24).required(),
+                variacao: joi.string().alphanum().length(24).required(),
+                precoUnitario: joi.number().required(),
+                quantidade: joi.number().required()
+            })).required(),
+            pagamento: joi.object({
+                valor: joi.number().required(),
+                forma: joi.string().required()
+            }).required(),
+            entrega: joi.object({
+                custo: joi.number().required(),
+                tipo: joi.string().required(),
+                prazo: joi.number().required()
+            }).required()
         }
-    }, 
-    body: {
-        carrinho: joi.array().items(joi.object({
-            produto: joi.string().alphanum().length(24).required(),
-            variacao: joi.string().alphanum().length(24).required(),
-            precoUnitario: joi.number().required(),
-            quantidade: joi.number().required()
-        })).required(),
-        pagamento: joi.object({
-            valor: joi.number().required(),
-            forma: joi.string().required()
-        }).required(),
-        entrega: joi.object({
-            custo: joi.number().required(),
-            prazo: joi.number().required()
-        }).required()
     }
 };
 

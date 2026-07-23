@@ -14,13 +14,13 @@ const getCarrinhoValue = (carrinho) => {
     return { precoTotal, quantidade };
 }
 
-getLojaValue = (carrinho) => {
-    const results = Promise.all(carrinho.map(async (item) => {
+const getLojaValue = async (carrinho) => {
+    const results = await Promise.all(carrinho.map(async (item) => {
         const produto = await Produto.findById(item.produto);
         const variacao = await Variacao.findById(item.variacao);
         let preco = 0;
         let qtd = 0;
-        if( produto && variacao && produto.variacao.includes(variacao._id) ){
+        if( produto && variacao && produto.variacoes.map(item => item.toString()).includes(variacao._id.toString()) ){
             let _preco = variacao.promocao || variacao.preco;
             preco = _preco * item.quantidade;
             qtd = item.quantidade;
@@ -32,8 +32,11 @@ getLojaValue = (carrinho) => {
     return { precoTotal, quantidade };
 }
 
-function CarrinhoValidation(carrinho){
+async function CarrinhoValidation(carrinho) {
     const { precoTotal: precoTotalCarrinho, quantidade: quantidadeTotalCarrinho } = getCarrinhoValue(carrinho);
-    const { precoTotal: precoTotalLoja, quantidade: quantidadeTotalLoja } = getLojaValue(carrinho);
+    const { precoTotal: precoTotalLoja, quantidade: quantidadeTotalLoja } = await getLojaValue(carrinho);
+    // console.log(precoTotalCarrinho, quantidadeTotalCarrinho, precoTotalCarrinho, quantidadeTotalLoja)
     return precoTotalCarrinho === precoTotalLoja && quantidadeTotalCarrinho === quantidadeTotalLoja;
 }
+
+module.exports = CarrinhoValidation;
