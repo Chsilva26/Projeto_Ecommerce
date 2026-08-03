@@ -4,10 +4,10 @@ const enviarEmailRecovery = require("../helpers/email-recovery");
 const usuario = require("../models/usuario");
 
 class UsuarioController {
-    // GET  
+    // GET /
     index(req, res, next) {
         Usuario.findById(req.payload.id).then(usuario => {
-            if(!usuario) return res.status(401).json({ errors: "Usuário não registrado" });
+            if(!usuario) return res.status(401).json({ errors: "Usuário não encontrado" });
             return res.json({ usuario: usuario.enviarAuthJSON() });
         }).catch(next);
     }

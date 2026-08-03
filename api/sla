@@ -1,0 +1,5 @@
+db.usuarios.update({"_id" : ObejectId("6a6b2f3fb886117617dcc268")}, {$set:{
+    "permissão": [ 
+        "cliente","admin"
+    ]
+}})

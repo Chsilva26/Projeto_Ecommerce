@@ -19,7 +19,7 @@ const PedidoSchema = Schema({
     },
     pagamento: { type: Schema.Types.ObjectId, ref: "Pagamento", required: true},
     entrega: { type: Schema.Types.ObjectId, ref: "Entrega", required: true},
-    entrega: { type: Boolean, default: false},
+    cancelado: { type: Boolean, default: false},
     loja: { type: Schema.Types.ObjectId, ref: "Loja", required: true }
 
 }, {timestamp: true});

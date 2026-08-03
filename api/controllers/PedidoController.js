@@ -167,7 +167,7 @@ class PedidoController {
             // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
 
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
-            console.log(cliente)
+            console.log("Cliente: ", cliente)
 
             const novoPagamento = new Pagamento({
                 valor: pagamento.valor,
@@ -180,12 +180,12 @@ class PedidoController {
                 status: "iniciando",
                 custo: entrega.custo,
                 prazo: entrega.prazo,
-                tipo: entrega.tipo,
+                entrega: entrega.tipo,
                 payload: entrega,
                 loja
             });
             const pedido = new Pedido({
-                cliente: cliente._id,
+                cliente: Cliente._id,
                 carrinho,
                 pagamento: novoPagamento._id,
                 entrega: novaEntrega._id,
