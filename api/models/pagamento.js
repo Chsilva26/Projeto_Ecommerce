@@ -11,7 +11,7 @@ const PagamentoSchema = Schema({
     valor: { type: Number, required: true },
     forma: { type: String, required: true },
     parcelado: { type: Object},
-    parcelado: { type: String, required: true },
+    status: { type: String, required: true },
     pedido: { type: Schema.ObjectId, ref: "Pedido", required: true },
     loja: { type: Schema.ObjectId, ref: "Loja", required: true },
     payload: { type: Object }

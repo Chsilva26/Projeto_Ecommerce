@@ -10,7 +10,7 @@ const EntregaSchema = Schema({
     status: { type: String, required: true},
     codigoRastreamento: { type: String},
     tipo: { type: String, required: true},
-    preco: { type: Number, required: true},
+    custo: { type: Number, required: true},
     prazo: { type: Number, required: true},
     pedido: { type: Schema.ObjectId, ref: "Pedido", required: true},
     loja: { type: Schema.ObjectId, ref: "Loja", required: true},

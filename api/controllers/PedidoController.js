@@ -111,7 +111,7 @@ class PedidoController {
 
             // console.log(JSON.stringify(clientes, null, 2));
             const pedidos = await Pedido.paginate(
-                { loja, cliente: Cliente._id },
+                { loja, cliente: cliente._id },
                 { 
                     offset: Number(offset || 0),  
                     limit: Number(limit || 30), 
@@ -166,8 +166,8 @@ class PedidoController {
             // CHECAR DADOS DO PAGAMENTO
             // if(!CarrinhoValidation(carrinho)) return res.status(422).send({ error: "Dados de entrega inválidos!"});
 
-            const cliente = await Cliente.findOne({ usuario: req.payload.id });
-            console.log("Cliente: ", cliente)
+            const cliente = await Cliente.findOne({ usuario:req.payload.id });
+           
 
             const novoPagamento = new Pagamento({
                 valor: pagamento.valor,
@@ -180,12 +180,12 @@ class PedidoController {
                 status: "iniciando",
                 custo: entrega.custo,
                 prazo: entrega.prazo,
-                entrega: entrega.tipo,
+                tipo: entrega.tipo,
                 payload: entrega,
                 loja
             });
             const pedido = new Pedido({
-                cliente: Cliente._id,
+                cliente: cliente._id,
                 carrinho,
                 pagamento: novoPagamento._id,
                 entrega: novaEntrega._id,
@@ -194,7 +194,7 @@ class PedidoController {
 
             
             novoPagamento.pedido = pedido._id;
-            novaEntrega.pedido = entrega._id;
+            novaEntrega.pedido = pedido._id;
 
             await pedido.save();
             await novoPagamento.save();
