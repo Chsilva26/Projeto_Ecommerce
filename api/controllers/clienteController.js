@@ -33,10 +33,10 @@ class ClienteController {
             const search = new RegExp(req.params.search, "i");
             const clientes = await Cliente.find({ loja, nome: { $regex: search} });
             const pedidos = await Pedido.paginate(
-                { loja, cliente : { $in: cliente.map(item => item._id) } },
+                { loja, cliente : { $in: clientes.map(item => item._id) } },
                 { offset, limit, populate: ["cliente", "pagamento", "entrega"] }
             );
-            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedido) => {
                 pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
                     item.produto = await Produto.findById(item.produto);
                     item.variacao = await Variacao.findById(item.variacao);
@@ -44,6 +44,7 @@ class ClienteController {
                 }));
                 return pedido;
             }));
+            return res.send({ pedidos });
         } catch(e){
             next(e);
         }
@@ -78,16 +79,16 @@ class ClienteController {
     async showPedidosCliente (req, res, next){
             const { offset, limit, loja} = req.query;
             try {
-                const cliente = await Cliente.findById({ usuario: req.payload.id });
+                const cliente = await Cliente.findOne({ _id: req.params.id });
                 const pedidos = await Pedido.paginate(
                     { loja, cliente: req.params.id },
                     { 
                         offset: Number(offset || 0),  
-                        limit: Number(offset || 30), 
+                        limit: Number(limit || 30), 
                         populate: ["cliente", "pagamento", "entrega"]
                     }
                 );
-                pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+                pedidos.docs = await Promise.all(pedidos.docs.map(async (pedido) => {
                     pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
                         item.produto = await Produto.findById(item.produto);
                         item.variacao = await Variacao.findById(item.variacao);

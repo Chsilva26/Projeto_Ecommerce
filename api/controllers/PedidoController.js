@@ -23,11 +23,11 @@ class PedidoController {
                 { loja },
                 { 
                     offset: Number(offset || 0),  
-                    limit: Number(offset || 30), 
+                    limit: Number(limit || 30), 
                     populate: ["cliente", "pagamento", "entrega"]
                 }
             );
-            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedidos) => {
+            pedidos.docs = await Promise.all(pedidos.docs.map(async (pedido) => {
                 pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
                     item.produto = await Produto.findById(item.produto);
                     item.variacao = await Variacao.findById(item.variacao);
@@ -107,9 +107,7 @@ class PedidoController {
         const { offset, limit, loja} = req.query;
         try {
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
-            // const clientes = await Cliente.find();
 
-            // console.log(JSON.stringify(clientes, null, 2));
             const pedidos = await Pedido.paginate(
                 { loja, cliente: cliente._id },
                 { 
@@ -137,8 +135,8 @@ class PedidoController {
     async show (req, res, next){ 
         try{
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
-            const pedido = await Pedido.findOne({ cliente: cliente._id, id: req.params.id }).populate(["cliente", "pagamento", "entrega"]);
-            
+            const pedido = await Pedido.findOne({ cliente: cliente._id, _id: req.params.id }).populate(["cliente", "pagamento", "entrega"]);
+            console.log("pedido", pedido)
             pedido.carrinho = await Promise.all(pedido.carrinho.map(async (item) => {
                     item.produto = await Produto.findById(item.produto);
                     item.variacao = await Variacao.findById(item.variacao);
