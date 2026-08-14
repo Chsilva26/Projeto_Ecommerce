@@ -9,6 +9,8 @@ const Cliente = mongoose.model("Cliente");
 const Usuario = mongoose.model("Usuario");
 const RegistroPedido = mongoose.model("RegistroPedido");
 
+const { calcularFrete } = require("./integracoes/correios");
+
 const CarrinhoValidation = require("./validacoes/carrinhoValidation");
 const variacao = require("../models/variacao");
 const { off } = require("../models/usuario");
@@ -142,7 +144,11 @@ class PedidoController {
                     item.variacao = await Variacao.findById(item.variacao);
                     return item;
                 }));
-                return res.send({ pedido });
+                const registros = await RegistroPedido.find({ pedido: pedido._id});
+                
+                const resultado = await calcularFrete({ cep: "05285041", produtos: pedido.carrinho})
+
+                return res.send({ resultado });
         }catch(e){
             next(e);
         }
